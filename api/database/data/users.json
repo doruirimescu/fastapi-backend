@@ -1,0 +1,14 @@
+{
+    "doru": {
+            "username": "doru",
+            "full_name": "Doru Irimescu",
+            "email": "doru@example.com",
+            "hashed_password": "$2b$12$tNdl81OSloKX..GgoP0Soekqo4rvOlQcGfP.0/vuEFBtSGR9sxlBy"
+        },
+    "ahmed": {
+            "username": "ahmed",
+            "full_name": "Ahmed Al-Sudani",
+            "email": "ahmed@example.com",
+            "hashed_password": "$2b$12$tNdl81OSloKX..GgoP0Soekqo4rvOlQcGfP.0/vuEFBtSGR9sxlBy"
+    }
+}

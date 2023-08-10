@@ -19,4 +19,7 @@ uvicorn==0.23.2
 uvloop==0.17.0
 watchfiles==0.19.0
 websockets==11.0.3
-python-dotenv
+python-jose==3.3.0
+passlib==1.7.4
+python-dotenv==1.0.0
+python-multipart
