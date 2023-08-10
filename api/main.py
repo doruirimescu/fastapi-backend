@@ -1,12 +1,13 @@
-from typing import Optional
-from fastapi import FastAPI, HTTPException, status, Form, Header
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from dotenv import load_dotenv
 import os
-from api.auth.user import UserInDb, authenticate_user
+from typing import Optional
+
+from dotenv import load_dotenv
+from fastapi import Depends, FastAPI, Form, Header, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
 import api.auth.token as token
 import api.database.wrapper as database
+from api.auth.user import UserInDb, authenticate_user
 
 load_dotenv()
 
