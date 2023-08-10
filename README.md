@@ -10,7 +10,7 @@
 6. install requirements `pip install -r requirements.txt`
 
 #### Run backend
-1. uvicorn api.main:app --reload
+1. run `uvicorn api.main:app --reload`
 2. navigate to http://127.0.0.1:8000/docs
 
 
