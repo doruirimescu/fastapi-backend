@@ -11,3 +11,9 @@
 1. change into api `cd api`
 2. uvicorn main:app --reload
 3. navigate to http://127.0.0.1:8000/docs
+
+
+## TODO
+1. Add ping endpoint
+2. Add login example
+3. Add json user database 
