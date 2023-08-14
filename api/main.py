@@ -61,9 +61,7 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = token.create(
-        data={"sub": user.username}
-    )
+    access_token = token.create(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -79,7 +77,14 @@ def register_user(form_data: UserRegistration = Depends()):
     full_name = form_data.full_name
     email = form_data.email
     hashed_password = generate_hashed_pwd(form_data.password)
-    database.insert_user({'username': username, 'full_name': full_name, 'email': email, 'hashed_password': hashed_password})
+    database.insert_user(
+        {
+            "username": username,
+            "full_name": full_name,
+            "email": email,
+            "hashed_password": hashed_password,
+        }
+    )
     return {"status": "ok"}
 
 
