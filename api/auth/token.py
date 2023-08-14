@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import jwt
-
+from jose import jwt, JWTError
+from fastapi import HTTPException, status
 # to get a string like this run:
 # openssl rand -hex 32
 # TODO: get secret key from env file
@@ -26,5 +26,12 @@ def create(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def decode(token: str) -> str:
-    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+def decode(token: str) -> dict:
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )

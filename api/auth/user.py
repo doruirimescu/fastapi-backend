@@ -19,13 +19,17 @@ class UserInDb(User):
     hashed_password: str
 
 
+def get_user_from_db(username: str, db: dict) -> UserInDb | bool:
+    return UserInDb(**db[username])
+
+
 def authenticate_user(
     username: str, plain_text_password: str, db: dict
 ) -> UserInDb | bool:
     if username not in db:
         return False
 
-    user = UserInDb(**db[username])
+    user = get_user_from_db(username, db)
     if not is_pwd_valid(plain_text_password, user.hashed_password):
         return False
     return user
