@@ -18,6 +18,7 @@
 1. Add ping endpoint
 2. Add login example
 3. Add json user database
+4. Add websocket chat example
 
 Dockerize
 Unit tests
