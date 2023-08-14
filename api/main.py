@@ -7,6 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 import api.auth.token as token
 import api.database.wrapper as database
+from api.auth.exceptions import USER_UNAUTHORIZED, USER_EXISTS
 from api.auth.user import authenticate_user, get_user_from_db, UserRegistration
 from api.auth.passwd import generate_hashed_pwd
 
@@ -19,21 +20,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
 async def get_current_user(token_: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
         payload = token.decode(token_)
         username: str = payload.get("sub")
         if username is None:
-            raise credentials_exception
+            raise USER_UNAUTHORIZED
     except Exception as e:
         raise e
     user = get_user_from_db(username=username, db=users_dict)
     if user is None:
-        raise credentials_exception
+        raise USER_UNAUTHORIZED
     return user
 
 
@@ -46,11 +42,7 @@ def read_root():
 def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password, users_dict)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise USER_UNAUTHORIZED
     access_token = token.create(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -60,10 +52,8 @@ def register_user(form_data: UserRegistration = Depends()):
     print(form_data)
     username = form_data.username
     if username in users_dict:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already exists",
-        )
+        raise USER_EXISTS
+
     full_name = form_data.full_name
     email = form_data.email
     hashed_password = generate_hashed_pwd(form_data.password)
@@ -80,4 +70,7 @@ def register_user(form_data: UserRegistration = Depends()):
 
 @app.post("/chat")
 async def chat(token_: str = Depends(get_current_user)):
-    return {"status": "ok", "message": "Hello World"}
+    # return random
+    from random import randint
+    random_nr = randint(0, 100)
+    return {"status": "ok", "message": f"Hello World {random_nr}"}
