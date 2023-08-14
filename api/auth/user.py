@@ -13,6 +13,11 @@ class User(BaseModel):
     full_name: Optional[str] = None
 
 
+class UserRegistration(User):
+    """Used for registering user"""
+    password: str
+
+
 class UserInDb(User):
     """Used for requests"""
 

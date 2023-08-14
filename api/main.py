@@ -7,7 +7,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 import api.auth.token as token
 import api.database.wrapper as database
-from api.auth.user import authenticate_user, get_user_from_db
+from api.auth.user import authenticate_user, get_user_from_db, UserRegistration
+from api.auth.passwd import generate_hashed_pwd
 
 load_dotenv()
 
@@ -66,13 +67,22 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    for i in range(item_id):
-        print(i)
-    return {"item_id": item_id, "q": q}
+@app.post("/register")
+def register_user(form_data: UserRegistration = Depends()):
+    print(form_data)
+    username = form_data.username
+    if username in users_dict:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists",
+        )
+    full_name = form_data.full_name
+    email = form_data.email
+    hashed_password = generate_hashed_pwd(form_data.password)
+    database.insert_user({'username': username, 'full_name': full_name, 'email': email, 'hashed_password': hashed_password})
+    return {"status": "ok"}
 
 
 @app.post("/chat")
-async def chat(token: str = Depends(get_current_user)):
+async def chat(token_: str = Depends(get_current_user)):
     return {"status": "ok", "message": "Hello World"}

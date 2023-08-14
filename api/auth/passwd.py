@@ -9,6 +9,3 @@ def is_pwd_valid(plain_text_password: str, hashed_password: str) -> bool:
 
 def generate_hashed_pwd(plain_text_password: str) -> str:
     return pwd_context.hash(plain_text_password)
-
-pwd = "$2b$12$tNdl81OSloKX..GgoP0Soekqo4rvOlQcGfP.0/vuEFBtSGR9sxlBy"
-print(is_pwd_valid("pwd", pwd))
