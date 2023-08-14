@@ -15,7 +15,6 @@ load_dotenv()
 
 app = FastAPI()
 
-users_dict = database.get_users()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
@@ -27,7 +26,7 @@ async def get_current_user(token_: str = Depends(oauth2_scheme)):
             raise USER_UNAUTHORIZED
     except Exception as e:
         raise e
-    user = get_user_from_db(username=username, db=users_dict)
+    user = get_user_from_db(username=username, db=database.get_users())
     if user is None:
         raise USER_UNAUTHORIZED
     return user
@@ -40,7 +39,9 @@ def read_root():
 
 @app.post("/login", response_model=token.Token)
 def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password, users_dict)
+    user = authenticate_user(
+        form_data.username, form_data.password, database.get_users()
+    )
     if not user:
         raise USER_UNAUTHORIZED
     access_token = token.create(data={"sub": user.username})
@@ -51,7 +52,7 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
 def register_user(form_data: UserRegistration = Depends()):
     print(form_data)
     username = form_data.username
-    if username in users_dict:
+    if username in database.get_users():
         raise USER_EXISTS
 
     full_name = form_data.full_name
@@ -72,5 +73,6 @@ def register_user(form_data: UserRegistration = Depends()):
 async def chat(token_: str = Depends(get_current_user)):
     # return random
     from random import randint
+
     random_nr = randint(0, 100)
     return {"status": "ok", "message": f"Hello World {random_nr}"}
