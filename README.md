@@ -4,7 +4,7 @@
 ### Install from source
 1. clone this repo and cd into it
 2. create environment variables `cp example-env.env .env`
-3. populate .env with your credentials
+3. populate `.env` with your credentials (no need right now)
 4. create a python venv `python3.10 -m venv venv`
 5. activate the virtual environment `source venv/bin/activate`
 6. install requirements `pip install -r requirements.txt`
