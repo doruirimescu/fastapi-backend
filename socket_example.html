@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <script src='https://cdn.socket.io/4.5.0/socket.io.min.js'></script>
+        <script>
+         var socket = io(
+             "http://localhost:8000", {
+                 path: "/ws/socket.io/",
+                 query: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkb3J1IiwiZXhwIjoxNjkyMDM0MTY0fQ.eWLYYOOwdRv20YCgC5lpTHF3guuGGefJFsO8JJ24-7A"}
+             }
+         );
+         socket.on("connect", () => {
+             console.log('Connected');
+         });
+
+         socket.on("chat-rsp", (params) => {
+             console.log('Chat-rsp received: ', params);
+             document.getElementById("responseBox").innerHTML = params;
+         });
+
+         function chat() {
+             var textInput = document.getElementById("textInput").value;
+             socket.emit(
+                'chat',
+                textInput);
+         }
+        </script>
+    </head>
+    <body>
+        <input type="text" id="textInput" placeholder="Enter your text here">
+        <button onclick="chat()" type="button">Chat</button>
+        <div id="responseBox"></div>
+    </body>
+</html>
