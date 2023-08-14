@@ -13,6 +13,10 @@
 1. run `uvicorn api.main:app --reload`
 2. navigate to http://127.0.0.1:8000/docs
 
+#### Run websocket frontend mock
+1. open [socket_example.html](https://github.com/doruirimescu/fastapi-backend/blob/master/socket_example.html) with browser
+2. login user via /login endpoint, get the token
+3. replace the token in [html](https://github.com/doruirimescu/fastapi-backend/blob/9fea52b69011cf40c197d3e63ad6889c4c5f08c0/socket_example.html#L9)
 
 ## TODO
 Dockerize
