@@ -12,11 +12,8 @@ from api.auth.passwd import generate_hashed_pwd
 
 load_dotenv()
 
-print(os.getenv("TEST"))
-
 app = FastAPI()
 
-# should load from db json
 users_dict = database.get_users()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -43,13 +40,6 @@ async def get_current_user(token_: str = Depends(oauth2_scheme)):
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    for i in range(item_id):
-        print(i)
-    return {"item_id": item_id, "q": q}
 
 
 @app.post("/login", response_model=token.Token)
