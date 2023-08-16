@@ -60,6 +60,5 @@ for msg in history.messages[1:]:
 from chatbot.summarizer import gather_data_sync
 result = gather_data_sync(inp, SCHEMA)
 print(result)
-# dump result to file
-with open("result.txt", "w") as f:
-    f.write(str(result))
+
+#TODO: should we store the result in a database?
