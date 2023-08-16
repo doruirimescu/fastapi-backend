@@ -51,6 +51,7 @@ class DesiredJobType(str, Enum):
 
 
 class JobSeekerProfile(BaseModel):
+    # This datastructure is used to store the user's profile information
     full_name: str
     contact_information: ContactInformation
     education: List[Education]
@@ -65,7 +66,27 @@ class JobSeekerProfile(BaseModel):
     linkedin_profile: HttpUrl
     resume_link: HttpUrl
 
-# TO BE ADDED FOR COVER LETTER GENERATION:
 
+
+# TO BE ADDED FOR COVER LETTER GENERATION:
+class PersonalStatement(BaseModel):
+    career_goals: str
+    interests: str
+    seeking_position: str  # Description of the type of position they are seeking
+
+
+class Achievement(BaseModel):
+    title: str
+    description: str
+
+
+class CareerChangeExplanation(BaseModel):
+    reason: str
+    aligns_with_goals: str  # How the change aligns with career goals
+
+
+class CustomSection(BaseModel):
+    section_title: str
+    content: str | List[Achievement] | CareerChangeExplanation
 
 SCHEMA = JobSeekerProfile.schema()
