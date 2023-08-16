@@ -30,16 +30,15 @@ def gather_data_sync(inp: str, schema):
     return json.loads(result.content)
 
 """Example usage"""
-from chatbot.user_model import SCHEMA, JobSeekerProfile
-from chatbot.test.data import input_data
-result = gather_data_sync(input_data, SCHEMA)
-print(result)
+# from chatbot.user_model import SCHEMA, JobSeekerProfile
+# from chatbot.test.data import input_data
+# result = gather_data_sync(input_data, SCHEMA)
+# print(result)
 
 
-profile_json = JobSeekerProfile(**result)
-# dump pydantic to file
-with open("result.json", "w") as f:
-    f.write(profile_json.json())
+# profile_json = JobSeekerProfile(**result)
+# # dump pydantic to file
+# with open("result.json", "w") as f:
+#     f.write(profile_json.json())
 
 # TODO: store the result in a database
-# TODO: change schema into pydantic model

@@ -2,7 +2,6 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, HttpUrl, Field
 from enum import Enum
 from datetime import date
-import json
 
 #TODO: Add validators
 # https://python.langchain.com/docs/modules/model_io/output_parsers/pydantic
