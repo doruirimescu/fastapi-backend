@@ -14,7 +14,7 @@ load_dotenv()
 
 llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
 
-system_message = SystemMessage(content=PROFILER_SYSTEM_PROMPT)
+system_message = SystemMessage(content=PROFILER_SYSTEM_PROMPT(SCHEMA))
 history = ChatMessageHistory()
 history.add_message(system_message)
 
