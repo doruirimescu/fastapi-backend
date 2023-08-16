@@ -10,6 +10,7 @@ from langchain.output_parsers import PydanticOutputParser
 
 from chatbot.user_model import SCHEMA
 from dotenv import load_dotenv
+import asyncio
 
 load_dotenv()
 
@@ -46,11 +47,17 @@ and my online portfolio is at http://www.janesmithportfolio.com.
 You can also download my resume from http://www.janesmithresume.com.
 """
 
+
 # Run chain
-llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
-chain = create_extraction_chain(SCHEMA, llm)
-result = chain.run(inp)
-print(result)
+async def gather_data(inp):
+    llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+    chain = create_extraction_chain(SCHEMA, llm)
+    result = await chain.arun(inp)
+    print(result)
+
+
+asyncio.run(gather_data(inp))
+
 
 # TODO: store the result in a database
 # TODO: change schema into pydantic model
