@@ -1,1 +1,0 @@
-[{'first_name': 'doru', 'middle_name': 'stefan', 'last_name': 'irimescu', 'contact_information': {'email': 'doru.irimescu@gmail.com', 'phone_number': '+358466162925'}, 'education': [{'degree': "Master's Degree", 'field_of_study': 'Automation and electrical engineering', 'institution': 'Aalto university', 'graduation_year': '2020'}]}]
