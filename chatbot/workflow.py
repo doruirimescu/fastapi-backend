@@ -3,9 +3,11 @@
 from typing import List
 from pydantic import BaseModel
 
+
 class Question(BaseModel):
     field: str
     question: str
+
 
 class Section(BaseModel):
     section: str

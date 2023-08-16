@@ -1,9 +1,11 @@
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, HttpUrl
+from pydantic import BaseModel, EmailStr, HttpUrl, Field
 from enum import Enum
+from datetime import date
 import json
 
-
+#TODO: Add validators
+# https://python.langchain.com/docs/modules/model_io/output_parsers/pydantic
 class ContactInformation(BaseModel):
     email: EmailStr
     phone_number: str
@@ -19,8 +21,8 @@ class Education(BaseModel):
 class WorkExperience(BaseModel):
     job_title: str
     company: str
-    start_date: str
-    end_date: str
+    start_date: date
+    end_date: Optional[date]
     responsibilities: str
 
 
@@ -28,7 +30,7 @@ class Certification(BaseModel):
     certification_name: str
     issuing_organization: str
     date_issued: str
-    expiration_date: Optional[str]
+    expiration_date: Optional[date]
 
 
 class ProfficiencyLevel(str, Enum):
@@ -53,19 +55,21 @@ class DesiredJobType(str, Enum):
 
 class JobSeekerProfile(BaseModel):
     # This datastructure is used to store the user's profile information
-    full_name: str
+    first_name: str = Field(description="What is your first name ?")
+    middle_name: Optional[str] = Field(description="What is your middle name ? Answer N/A if you don't have one")
+    last_name: Optional[str] = Field(description="What is your last name ?")
     contact_information: ContactInformation
     education: List[Education]
+    languages: List[Language]
     work_experience: List[WorkExperience]
     skills: List[str]
     certifications: List[Certification]
-    languages: List[Language]
-    desired_job_location: str
-    desired_job_type: DesiredJobType
-    desired_industry: str
-    portfolio_link: HttpUrl
-    linkedin_profile: HttpUrl
-    resume_link: HttpUrl
+    desired_job_location: Optional[str]
+    desired_job_type: Optional[DesiredJobType]
+    desired_industry: Optional[str]
+    portfolio_link: Optional[HttpUrl]
+    linkedin_profile: Optional[HttpUrl]
+    resume_link: Optional[HttpUrl]
 
 
 # TO BE ADDED FOR COVER LETTER GENERATION:
@@ -91,4 +95,3 @@ class CustomSection(BaseModel):
 
 
 SCHEMA = JobSeekerProfile.schema()
-SCHEMA = json.dumps(SCHEMA, indent=4)

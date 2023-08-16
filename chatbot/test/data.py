@@ -1,6 +1,6 @@
 # Data for unit tests
 
-input = """
+input_data = """
 My name is Jane Smith, and I'm actively seeking new opportunities. You can reach me at jane.smith@example.com or call me at (123) 456-7890.
 
 Education:
@@ -95,7 +95,7 @@ expected_result = {
     "resume_link": "http://www.janesmithresume.com",
 }
 
-from chatbot.user_model import JobSeekerProfile
-# Use result to create a JobSeekerProfile object
-profile = JobSeekerProfile(**expected_result)
-print(profile)
+# from chatbot.user_model import JobSeekerProfile
+# # Use result to create a JobSeekerProfile object
+# profile = JobSeekerProfile(**expected_result)
+# print(profile)
