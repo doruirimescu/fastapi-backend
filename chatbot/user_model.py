@@ -1,6 +1,7 @@
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, HttpUrl
 from enum import Enum
+import json
 
 
 class ContactInformation(BaseModel):
@@ -67,7 +68,6 @@ class JobSeekerProfile(BaseModel):
     resume_link: HttpUrl
 
 
-
 # TO BE ADDED FOR COVER LETTER GENERATION:
 class PersonalStatement(BaseModel):
     career_goals: str
@@ -89,4 +89,6 @@ class CustomSection(BaseModel):
     section_title: str
     content: str | List[Achievement] | CareerChangeExplanation
 
+
 SCHEMA = JobSeekerProfile.schema()
+SCHEMA = json.dumps(SCHEMA, indent=4)
