@@ -24,3 +24,5 @@ passlib==1.7.4
 python-dotenv==1.0.0
 python-multipart
 fastapi-socketio
+langchain==0.0.264
+openai==0.27.8
