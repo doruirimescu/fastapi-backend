@@ -1,12 +1,24 @@
 <!doctype html>
 <html>
     <head>
+        <style>
+            .min-size-div {
+                min-height: 50px; /* Minimum height of 100 pixels */
+                min-width: 10px;  /* Minimum width of 200 pixels */
+                max-width: 210px;  /* Minimum width of 200 pixels */
+                border: 2px solid black;
+                padding: 10px;
+                background-color: #f0f0f0;
+                margin-bottom: 20px;
+                overflow: auto;
+            }
+        </style>
         <script src='https://cdn.socket.io/4.5.0/socket.io.min.js'></script>
         <script>
          var socket = io(
              "http://localhost:8000", {
                  path: "/ws/socket.io/",
-                 query: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkb3J1IiwiZXhwIjoxNjkyMDM0MTY0fQ.eWLYYOOwdRv20YCgC5lpTHF3guuGGefJFsO8JJ24-7A"}
+                 query: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkb3J1IiwiZXhwIjoxNjkyMzUyNTg0fQ.qDDW6I5ZvKtVXFaGuTf7_UlfBrjaSndOKzsZUJMcsto"}
              }
          );
          socket.on("connect", () => {
@@ -27,8 +39,8 @@
         </script>
     </head>
     <body>
+        <div id="responseBox" class="min-size-div"></div>
         <input type="text" id="textInput" placeholder="Enter your text here">
         <button onclick="chat()" type="button">Chat</button>
-        <div id="responseBox"></div>
     </body>
 </html>
