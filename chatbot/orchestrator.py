@@ -23,7 +23,7 @@ class Orchestrator:
         self.history, self.llm = self._construct_llm()
 
     def _construct_llm(self):
-        llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+        llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
         system_message = SystemMessage(content=ORCHESTRATOR_SYSTEM_PROMPT())
         history = ChatMessageHistory()
         history.add_message(system_message)

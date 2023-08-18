@@ -10,6 +10,7 @@ import api.database.wrapper as database
 from api.auth.exceptions import HTTP_USER_UNAUTHORIZED, HTTP_USER_EXISTS, UserUnauthorized, LoginExpired
 from api.auth.user import authenticate_user, get_user_from_db, UserRegistration
 from api.auth.passwd import generate_hashed_pwd
+from chatbot.orchestrator import Orchestrator
 
 load_dotenv()
 
@@ -17,6 +18,7 @@ app = FastAPI()
 sio = SocketManager(app=app)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+orchestrator = None
 
 
 async def get_current_user(token_: str = Depends(oauth2_scheme)):
@@ -39,7 +41,7 @@ def read_root():
 
 
 @app.post("/login", response_model=token.Token)
-def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(
         form_data.username, form_data.password, database.get_users()
     )
@@ -87,12 +89,19 @@ async def handle_connect(sid, environ):
         await get_current_user(token)
     except UserUnauthorized as e:
         print(f"Unauthorized. Will not connect")
-        await sio.emit('chat-rsp', {'status': 'error', 'message': 'Unauthorized'}, room=sid)
+        await sio.emit('chat-rsp', {'status': 'error', 'message': 'Unauthorized'})
         return False
     except LoginExpired as e:
         print(f"Login expired. Will not connect")
-        await sio.emit('chat-rsp', {'status': 'error', 'message': 'Login expired'}, room=sid)
+        await sio.emit('chat-rsp', {'status': 'error', 'message': 'Login expired'})
         return False
+
+    global orchestrator
+    user = await get_current_user(token)
+    orchestrator = Orchestrator(user.username)
+    bot_reply = orchestrator.introduction()
+    print(f"AI: {bot_reply}")
+    await sio.emit('chat-rsp', bot_reply)
 
 
 @sio.on('disconnect')
@@ -101,9 +110,8 @@ async def handle_disconnect(sid):
 
 
 @app.sio.on('chat')
-async def handle_poll(sid, *args, **kwargs):
-    from random import randint
-    random_nr = randint(0, 100)
+async def chat(sid, *args, **kwargs):
     input = args[0]
     print(f"Received {input} from {sid}")
-    await sio.emit('chat-rsp', f"Hello World {random_nr}", room=sid)
+    bot_reply, should_stop = orchestrator.orchestrate(input)
+    await sio.emit('chat-rsp', f"{bot_reply}")
