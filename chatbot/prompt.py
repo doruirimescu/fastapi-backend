@@ -38,3 +38,15 @@ def ORCHESTRATOR_SYSTEM_PROMPT() -> str:
 
 def ORCHESTRATOR_INTRO_PROMPT() -> str:
     return "Introduce yourself to the user and ask them if they would like to create a profile or find a job."
+
+
+def ORCHESTRATOR_PARSE_ACTION_PROMPT(user_action_enum) -> str:
+    return (
+        f"Parse the user input and determine the action to take. "
+
+        f"The possible actions are defined in this enum: {[e.value for e in user_action_enum]}"
+
+        f"Reply with the label of the action to take."
+
+        f"If the user input is not recognized, reply with the first label."
+    )
