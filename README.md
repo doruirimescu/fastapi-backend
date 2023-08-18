@@ -19,5 +19,8 @@
 3. replace the token in [html](https://github.com/doruirimescu/fastapi-backend/blob/9fea52b69011cf40c197d3e63ad6889c4c5f08c0/socket_example.html#L9)
 
 ## TODO
-Dockerize
-Unit tests
+- add logging module
+- add config module and configure loggers for each module (chatbot, api)
+- add timeouts for gpt calls
+- dockerize
+- unit tests
