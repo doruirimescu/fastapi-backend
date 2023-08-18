@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, HttpUrl, Field
+from pydantic import BaseModel, EmailStr, HttpUrl, Field, validator
 from enum import Enum
 from datetime import date
 
@@ -66,9 +66,22 @@ class JobSeekerProfile(BaseModel):
     desired_job_location: Optional[str]
     desired_job_type: Optional[DesiredJobType]
     desired_industry: Optional[str]
-    portfolio_link: Optional[HttpUrl]
-    linkedin_profile: Optional[HttpUrl]
-    resume_link: Optional[HttpUrl]
+    portfolio_link: Optional[str] = Field(description="What is the link to your portfolio ? Answer N/A if you don't have one")
+    linkedin_profile: Optional[str] = Field(description="What is the link to your linkedin profile ? Answer N/A if you don't have one")
+    resume_link: Optional[str] = Field(description="What is the link to your resume ? Answer N/A if you don't have one")
+
+    @validator('portfolio_link', pre=True)
+    def validate_portfolio_link(cls, value):
+        return None if value == "N/A" else value
+
+    @validator('linkedin_profile', pre=True)
+    def validate_linkedin_profile(cls, value):
+        return None if value == "N/A" else value
+
+    @validator('resume_link', pre=True)
+    def validate_resume_link(cls, value):
+        return None if value == "N/A" else value
+
 
 
 # TO BE ADDED FOR COVER LETTER GENERATION:
