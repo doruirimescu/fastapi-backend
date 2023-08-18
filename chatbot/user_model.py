@@ -56,19 +56,23 @@ class JobSeekerProfile(BaseModel):
     # This datastructure is used to store the user's profile information
     first_name: str = Field(description="What is your first name ?")
     middle_name: Optional[str] = Field(description="What is your middle name ? Answer N/A if you don't have one")
-    last_name: Optional[str] = Field(description="What is your last name ?")
+    last_name: str = Field(description="What is your last name ?")
     contact_information: ContactInformation
     education: List[Education]
     languages: List[Language]
     work_experience: List[WorkExperience]
     skills: List[str]
     certifications: List[Certification]
-    desired_job_location: Optional[str]
-    desired_job_type: Optional[DesiredJobType]
-    desired_industry: Optional[str]
+    desired_job_location: str
+    desired_job_type: DesiredJobType
+    desired_industry: str
     portfolio_link: Optional[str] = Field(description="What is the link to your portfolio ? Answer N/A if you don't have one")
     linkedin_profile: Optional[str] = Field(description="What is the link to your linkedin profile ? Answer N/A if you don't have one")
     resume_link: Optional[str] = Field(description="What is the link to your resume ? Answer N/A if you don't have one")
+
+    @validator('middle_name', pre=True)
+    def validate_middle_name(cls, value):
+        return None if value == "N/A" else value
 
     @validator('portfolio_link', pre=True)
     def validate_portfolio_link(cls, value):
