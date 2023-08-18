@@ -33,12 +33,17 @@ def ORCHESTRATOR_SYSTEM_PROMPT() -> str:
     step by step questions in order to find the user information. When you have all the required information, you
     are able to generate a CV, cover letter, and a job application email. You shall also be able to find suitable
     job opportunities for the user.
+
 """
 
 
-def ORCHESTRATOR_INTRO_PROMPT() -> str:
-    return "Introduce yourself to the user and ask them if they would like to create a profile or find a job."
-
+def ORCHESTRATOR_INTRO_PROMPT(does_user_profile_exist: bool) -> str:
+    prompt = "Introduce yourself to the user"
+    if does_user_profile_exist:
+        prompt += "Ask users if they want to update their profile, explore jobs, generate a CV or a cover letter"
+    else:
+        prompt += "Ask users if they want to start creating a profile."
+    return prompt
 
 def ACTION_SELECTOR_PROMPT(user_action_enum) -> str:
     return (
