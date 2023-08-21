@@ -21,8 +21,16 @@ class WorkExperience(BaseModel):
     job_title: str
     company: str
     start_date: date
-    end_date: Optional[date]
+    end_date: Optional[date] = Field(json_schema_extra={
+            'title': 'End date of this work position',
+            'description': 'The end date of this work position. If you are still working here, write N/A.',
+            'examples': ['YYYYY-MM-DD', 'N/A'],
+        })
     responsibilities: str
+
+    @validator('end_date', pre=True)
+    def validate_end_date(cls, value):
+        return None if value == "N/A" else value
 
 
 class Certification(BaseModel):

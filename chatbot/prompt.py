@@ -39,6 +39,7 @@ def ORCHESTRATOR_SYSTEM_PROMPT() -> str:
 
 def ORCHESTRATOR_INTRO_PROMPT(does_user_profile_exist: bool) -> str:
     prompt = "Introduce yourself to the user"
+    prompt += "\n"
     if does_user_profile_exist:
         prompt += "Ask users if they want to update their profile, explore jobs, generate a CV or a cover letter"
     else:
