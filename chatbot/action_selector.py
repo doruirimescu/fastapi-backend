@@ -15,8 +15,11 @@ class ActionSelector:
         self.history = ChatMessageHistory()
         self.history.add_message(self.system_message)
 
-    def reply(self, input: str) -> str:
-        self.history.add_user_message(input)
+    def reply(self, input: ChatMessageHistory) -> str:
+        for i in input.messages:
+            self.history.add_message(i)
         reply_text = self.llm.predict_messages(self.history.messages).content
-        self.history.messages.pop()
+
+        for i in range(len(input.messages)):
+            self.history.messages.pop()
         return reply_text

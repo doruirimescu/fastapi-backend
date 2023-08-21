@@ -69,13 +69,16 @@ class Orchestrator:
         # Should first validate the user input
         print(f"--- CURRENT STATE {self.current_state} ---")
         print(f"--- USER INPUT {user_input} ---")
+
+
+        if self.current_state == CurrentState.PARSE_NEXT_ACTION:
+            self.history.add_user_message(user_input)
+            next_action = self.action_selector.reply(self.history)
+            self.current_state = CurrentState(next_action)
+
         if self.current_state == CurrentState.INTRODUCE:
             self.current_state = CurrentState.PARSE_NEXT_ACTION
             return self.introduction(), False
-
-        if self.current_state == CurrentState.PARSE_NEXT_ACTION:
-            next_action = self.action_selector.reply(user_input)
-            self.current_state = CurrentState(next_action)
 
         #TODO: switch bsed on current state
 
@@ -98,4 +101,4 @@ class Orchestrator:
                 return "Error creating jobseeker profile. Please try again.", True
             else:
                 return self.profiler.reply(user_input), False
-        return "Profile is complete", True
+        return "Unknown action", True
