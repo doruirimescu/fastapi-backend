@@ -143,9 +143,9 @@ class JobSeekerProfile(BaseModel):
         certs = [
             c
             for c in value
-            if c.get("certification_name") is not ''
-            and c.get("issuing_organization") is not ''
-            and c.get("date_issued") is not ''
+            if c.get("certification_name") != ''
+            and c.get("issuing_organization") != ''
+            and c.get("date_issued") != ''
         ]
         return certs
 
@@ -171,7 +171,6 @@ class JobSeekerProfile(BaseModel):
 
     @root_validator(pre=True)
     def discard_incomplete_certifications(cls, values):
-        print("DISCARDING INCOMPLETE CERTIFICATIONS")
         certifications = values.get("certifications", [])
         complete_certifications = [c for c in certifications if has_required_fields(c, Certification)]
         if complete_certifications:
