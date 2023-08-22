@@ -85,20 +85,30 @@ class Orchestrator:
         # Then, call the profiler for now
         if self.current_state == CurrentState.CREATE_PROFILE:
             if user_input == "stop":
-                try:
-                    profiler_chat_history = self.profiler.get_history_string()
-                    json_data = self.summarizer.reply(profiler_chat_history)
-                    print(f"--- JSON DATA: {json_data}")
-                    jobseeker_profile = JobSeekerProfile(**json_data)
-                    print(f"--- jobseeker_profile {jobseeker_profile}")
-                    with open("result.json", "w") as f:
-                        f.write(jobseeker_profile.json())
-                    self.current_state = CurrentState.STOP
-                    return "Jobseeker profile created successfully.", True
-                except Exception as e:
-                    print(f"--- ERROR: {e}")
-                    self.current_state = CurrentState.INTRODUCE
-                return "Error creating jobseeker profile. Please try again.", True
+                return self.summarize_profile()
             else:
-                return self.profiler.reply(user_input), False
+                bot_reply = self.profiler.reply(user_input)
+                if "your profile is complete" in bot_reply.lower():
+                    self.profiler.history.messages.pop()
+                    return self.summarize_profile()
+                return bot_reply, False
         return "Unknown action", True
+
+    def summarize_profile(self):
+        profiler_chat_history = self.profiler.get_history_string()
+        json_data = self.summarizer.reply(profiler_chat_history)
+        print(f"--- JSON DATA: {json_data}")
+        try:
+            jobseeker_profile = JobSeekerProfile(**json_data)
+            print(f"--- jobseeker_profile {jobseeker_profile}")
+            with open("result.json", "w") as f:
+                f.write(jobseeker_profile.json())
+            self.current_state = CurrentState.STOP
+            return "Jobseeker profile created successfully.", True
+        except Exception as e:
+            print(f"--- ERROR: {e}")
+            inp = f"Error creating jobseeker profile: {e} \n"
+            inp = f"Explain the error \n"
+            inp += f"Ask the relevant questions again. \n"
+            inp += f"Reply with 'stop' when the questions are answered."
+            return self.profiler.reply(inp), False
