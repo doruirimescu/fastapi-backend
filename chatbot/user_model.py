@@ -5,6 +5,7 @@ from datetime import date
 
 #TODO: Add validators
 # https://python.langchain.com/docs/modules/model_io/output_parsers/pydantic
+
 class ContactInformation(BaseModel):
     email: EmailStr
     phone_number: str
@@ -20,10 +21,17 @@ class Education(BaseModel):
 class WorkExperience(BaseModel):
     job_title: str
     company: str
-    start_date: date
-    end_date: Optional[date] = Field(json_schema_extra={
+    start_date: date = Field(
+        json_schema_extra={
+            'title': 'Start date of this work position',
+            'description': 'The start date of this work position. Format: YYYY-MM-DD',
+            'examples': ['YYYYY-MM-DD'],
+        }
+    )
+    end_date: Optional[date] = Field(
+        json_schema_extra={
             'title': 'End date of this work position',
-            'description': 'The end date of this work position. If you are still working here, write N/A.',
+            'description': 'The end date of this work position. Format: YYYY-MM-DD. If you are still working here, write N/A. ',
             'examples': ['YYYYY-MM-DD', 'N/A'],
         })
     responsibilities: str
@@ -37,7 +45,17 @@ class Certification(BaseModel):
     certification_name: str
     issuing_organization: str
     date_issued: str
-    expiration_date: Optional[date]
+    expiration_date: Optional[date] = Field(
+        json_schema_extra={
+            'title': 'Expiration date of this certification',
+            'description': 'The expiration date of this certification. Format: YYYY-MM-DD. If it does not expire, write N/A.',
+            'examples': ['YYYYY-MM-DD', 'N/A'],
+        }
+    )
+
+    @validator('expiration_date', pre=True)
+    def validate_expiration_date(cls, value):
+        return None if value == "N/A" else value
 
 
 class ProfficiencyLevel(str, Enum):
@@ -74,9 +92,28 @@ class JobSeekerProfile(BaseModel):
     desired_job_location: str
     desired_job_type: DesiredJobType
     desired_industry: str
-    portfolio_link: Optional[str] = Field(description="What is the link to your portfolio ? Answer N/A if you don't have one")
-    linkedin_profile: Optional[str] = Field(description="What is the link to your linkedin profile ? Answer N/A if you don't have one")
-    resume_link: Optional[str] = Field(description="What is the link to your resume ? Answer N/A if you don't have one")
+    portfolio_link: Optional[str] = Field(
+        json_schema_extra={
+            'title': 'Link to your portfolio',
+            'description': 'What is the link to your portfolio ? Answer N/A if you don\'t have one',
+            'examples': ['https://www.example.com', 'N/A'],
+        }
+    )
+
+    linkedin_profile: Optional[str] = Field(
+        json_schema_extra={
+            'title': 'Link to your linkedin profile',
+            'description': 'What is the link to your portfolio ? Answer N/A if you don\'t have one',
+            'examples': ['https://www.linkedin.com/in/name-name/', 'N/A'],
+        }
+    )
+    resume_link: Optional[str] = Field(
+        json_schema_extra={
+            'title': 'Link to your resume profile',
+            'description': 'What is the link to your resume ? Answer N/A if you don\'t have one',
+            'examples': ['https://www.example.com/', 'N/A'],
+        }
+    )
 
     @validator('middle_name', pre=True)
     def validate_middle_name(cls, value):
