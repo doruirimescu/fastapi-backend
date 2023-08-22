@@ -70,7 +70,6 @@ class Orchestrator:
         print(f"--- CURRENT STATE {self.current_state} ---")
         print(f"--- USER INPUT {user_input} ---")
 
-
         if self.current_state == CurrentState.PARSE_NEXT_ACTION:
             self.history.add_user_message(user_input)
             next_action = self.action_selector.reply(self.history)
@@ -89,7 +88,7 @@ class Orchestrator:
             else:
                 bot_reply = self.profiler.reply(user_input)
                 if "your profile is complete" in bot_reply.lower():
-                    self.profiler.history.messages.pop()
+                    print("Summarizing profile")
                     return self.summarize_profile()
                 return bot_reply, False
         return "Unknown action", True
@@ -108,7 +107,7 @@ class Orchestrator:
         except Exception as e:
             print(f"--- ERROR: {e}")
             inp = f"Error creating jobseeker profile: {e} \n"
-            inp = f"Explain the error \n"
+            inp = f"Explain the error \n"
             inp += f"Ask the relevant questions again. \n"
             inp += f"Reply with 'stop' when the questions are answered."
             return self.profiler.reply(inp), False
