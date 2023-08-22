@@ -138,6 +138,17 @@ class JobSeekerProfile(BaseModel):
     def validate_resume_link(cls, value):
         return None if value == "N/A" else value
 
+    @validator('certifications', pre=True)
+    def validate_certifications(cls, value):
+        certs = [
+            c
+            for c in value
+            if c.get("certification_name") is not ''
+            and c.get("issuing_organization") is not ''
+            and c.get("date_issued") is not ''
+        ]
+        return certs
+
     @root_validator(pre=True)
     def discard_incomplete_work_experience(cls, values):
         work_experiences = values.get("work_experience", [])
@@ -156,6 +167,17 @@ class JobSeekerProfile(BaseModel):
             values["education"] = complete_educations
         else:
             values.pop("education", None)
+        return values
+
+    @root_validator(pre=True)
+    def discard_incomplete_certifications(cls, values):
+        print("DISCARDING INCOMPLETE CERTIFICATIONS")
+        certifications = values.get("certifications", [])
+        complete_certifications = [c for c in certifications if has_required_fields(c, Certification)]
+        if complete_certifications:
+            values["certifications"] = complete_certifications
+        else:
+            values.pop("certifications", None)
         return values
 
 
