@@ -9,45 +9,58 @@
                 border: 2px solid black;
                 padding: 10px;
                 background-color: #f0f0f0;
+                margin-top: 20px;
                 margin-bottom: 20px;
                 overflow: auto;
             }
         </style>
         <script src='https://cdn.socket.io/4.5.0/socket.io.min.js'></script>
         <script>
-         var socket = io(
-             "http://localhost:8000", {
-                 path: "/ws/socket.io/",
-                 query: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkb3J1IiwiZXhwIjoxNjkyMzc4NjkzfQ.cK0M2RgVF3VqZxyoxWnJPD-VgRAXvlJQr9T6OacL_30"}
-             }
-         );
-         socket.on("connect", () => {
-             console.log('Connected');
-         });
+            var socket;
+            function initializeSocket(token) {
+                socket = io(
+                    "http://localhost:8000", {
+                        path: "/ws/socket.io/",
+                        query: { token: token }
+                    }
+                );
 
-         socket.on("chat-rsp", (params) => {
-            // Re-enable the input box and button
-            document.getElementById("textInput").disabled = false;
-            document.getElementById("chatButton").disabled = false;
+                socket.on("connect", () => {
+                    console.log('Connected');
+                });
 
-            console.log('Chat-rsp received: ', params);
-            document.getElementById("responseBox").innerHTML = params;
-         });
+                socket.on("chat-rsp", (params) => {
+                // Re-enable the input box and button
+                document.getElementById("textInput").disabled = false;
+                document.getElementById("chatButton").disabled = false;
 
-         function chat() {
-             var textInput = document.getElementById("textInput").value;
-             socket.emit(
-                'chat',
-                textInput);
-            document.getElementById("responseBox").innerHTML = "Thinking...";
+                console.log('Chat-rsp received: ', params);
+                document.getElementById("responseBox").innerHTML = params;
+                });
+            }
+        function setToken() {
+            var tokenInput = document.getElementById("tokenInput").value;
+            initializeSocket(tokenInput);
+        }
 
-            // Disable the input box and button
-            document.getElementById("textInput").disabled = true;
-            document.getElementById("chatButton").disabled = true;
-         }
+        function chat() {
+            var textInput = document.getElementById("textInput").value;
+            socket.emit(
+            'chat',
+            textInput);
+        document.getElementById("responseBox").innerHTML = "Thinking...";
+
+        // Disable the input box and button
+        document.getElementById("textInput").disabled = true;
+        document.getElementById("chatButton").disabled = true;
+        }
         </script>
     </head>
     <body>
+        <label for="tokenInput">Socket Token:</label>
+        <input type="text" id="tokenInput" placeholder="Enter socket token">
+        <button onclick="setToken()" type="button" id="setTokenButton">Set Token</button>
+
         <div id="responseBox" class="min-size-div"></div>
         <input type="text" id="textInput" placeholder="Enter your text here">
         <button onclick="chat()" type="button" id="chatButton">Chat</button>
