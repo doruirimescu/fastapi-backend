@@ -22,17 +22,3 @@ class Summarizer:
         self.history.add_user_message(input)
         result = self.llm.predict_messages(self.history.messages)
         return json.loads(result.content)
-
-
-# """Example usage"""
-# from chatbot.user_model import SCHEMA, JobSeekerProfile
-# from chatbot.test.data import input_data
-# s = Summarizer(SCHEMA)
-# result = s.reply(input_data)
-# print(result)
-
-
-# profile = JobSeekerProfile(**result)
-# # dump pydantic to file
-# with open("result.json", "w") as f:
-#     f.write(profile.json())
