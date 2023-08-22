@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, HttpUrl, Field, validator
+from pydantic import BaseModel, EmailStr, HttpUrl, Field, validator, root_validator
 from enum import Enum
 from datetime import date
 
@@ -78,6 +78,13 @@ class DesiredJobType(str, Enum):
     INTERNSHIP = "Internship"
 
 
+def has_required_fields(data: dict, model) -> bool:
+    for field_name, field in model.__fields__.items():
+        if data.get(field_name) is None:
+            return False
+    return True
+
+
 class JobSeekerProfile(BaseModel):
     # This datastructure is used to store the user's profile information
     first_name: str = Field(description="What is your first name ?")
@@ -111,7 +118,7 @@ class JobSeekerProfile(BaseModel):
         json_schema_extra={
             'title': 'Link to your resume profile',
             'description': 'What is the link to your resume ? Answer N/A if you don\'t have one',
-            'examples': ['https://www.example.com/', 'N/A'],
+            'examples': ['https://www.example.com', 'N/A'],
         }
     )
 
@@ -130,6 +137,26 @@ class JobSeekerProfile(BaseModel):
     @validator('resume_link', pre=True)
     def validate_resume_link(cls, value):
         return None if value == "N/A" else value
+
+    @root_validator(pre=True)
+    def discard_incomplete_work_experience(cls, values):
+        work_experiences = values.get("work_experience", [])
+        complete_work_experiences = [we for we in work_experiences if has_required_fields(we, WorkExperience)]
+        if complete_work_experiences:
+            values["work_experience"] = complete_work_experiences
+        else:
+            values.pop("work_experience", None)
+        return values
+
+    @root_validator(pre=True)
+    def discard_incomplete_education(cls, values):
+        educations = values.get("education", [])
+        complete_educations = [e for e in educations if has_required_fields(e, Education)]
+        if complete_educations:
+            values["education"] = complete_educations
+        else:
+            values.pop("education", None)
+        return values
 
 
 
