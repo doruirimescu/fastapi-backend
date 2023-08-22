@@ -20,6 +20,7 @@ class Profiler:
         self.history.add_message(self.system_message)
 
     def reply(self, input: str) -> Optional[str]:
+        input = input.lower()
         self.history.add_user_message(input)
         reply = self.llm(self.history.messages)
         reply_text = reply.content

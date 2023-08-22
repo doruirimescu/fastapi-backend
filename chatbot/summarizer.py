@@ -3,7 +3,8 @@ from langchain.schema import SystemMessage
 from langchain.memory import ChatMessageHistory
 import json
 from chatbot.prompt import SUMMARIZER_SYSTEM_PROMPT, SUMMARIZER_SYSTEM_PROMPT_2
-
+from dotenv import load_dotenv
+load_dotenv()
 
 class Summarizer:
     def __init__(self, schema) -> None:
@@ -19,6 +20,9 @@ class Summarizer:
         return json.loads(result.content)
 
     def reply(self, input: str):
+        input = input.lower()
+        print(input)
         self.history.add_user_message(input)
-        result = self.llm.predict_messages(self.history.messages)
-        return json.loads(result.content)
+        result_text = self.llm.predict_messages(self.history.messages).content.lower()
+        print(json.dumps(json.loads(result_text), indent=4))
+        return json.loads(result_text)
