@@ -18,7 +18,8 @@ app = FastAPI()
 sio = SocketManager(app=app)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-orchestrator = None
+orchestrators_dict = {}
+sid_username_dict = {}
 
 
 async def get_current_user(token_: str = Depends(oauth2_scheme)):
@@ -96,10 +97,11 @@ async def handle_connect(sid, environ):
         await sio.emit('chat-rsp', {'status': 'error', 'message': 'Login expired'})
         return False
 
-    global orchestrator
+    global orchestrators_dict
     user = await get_current_user(token)
-    orchestrator = Orchestrator(user.username)
-    bot_reply, _ = orchestrator.reply(None)
+    orchestrators_dict[user.username] = Orchestrator(user.username)
+    sid_username_dict[sid] = user.username
+    bot_reply, _ = orchestrators_dict[user.username].reply(None)
     print(f"AI: {bot_reply}")
     await sio.emit('chat-rsp', bot_reply)
 
@@ -113,5 +115,6 @@ async def handle_disconnect(sid):
 async def chat(sid, *args, **kwargs):
     input = args[0]
     print(f"Received {input} from {sid}")
-    bot_reply, _ = orchestrator.reply(input)
+    username = sid_username_dict[sid]
+    bot_reply, _ = orchestrators_dict[username].reply(input)
     await sio.emit('chat-rsp', f"{bot_reply}")
