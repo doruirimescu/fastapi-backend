@@ -50,6 +50,10 @@
             textInput);
         document.getElementById("responseBox").innerHTML = "Thinking...";
 
+        // Clear the chat input box
+        document.getElementById("textInput").value = "";
+
+
         // Disable the input box and button
         document.getElementById("textInput").disabled = true;
         document.getElementById("chatButton").disabled = true;
