@@ -24,3 +24,4 @@ python-multipart
 fastapi-socketio
 langchain
 openai==0.27.8
+pytest-timeout
