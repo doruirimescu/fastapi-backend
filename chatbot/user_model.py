@@ -97,9 +97,19 @@ class JobSeekerProfile(BaseModel):
     middle_name: Optional[str] = Field(description="What is your middle name ? Answer n/a if you don't have one")
     last_name: str = Field(description="What is your last name ?")
     contact_information: ContactInformation
-    education: List[Education]
+    education: List[Education] = Field(
+        json_schema_extra={
+            'title': 'Education',
+            'description': 'List of all your education experiences (Bsc, Msc, etc)',
+        }
+    )
     languages: List[Language]
-    work_experience: List[WorkExperience]
+    work_experience: List[WorkExperience] = Field(
+        json_schema_extra={
+            'title': 'Work experience',
+            'description': 'List of all your work experiences',
+        }
+    )
     skills: List[str]
     certifications: List[Certification]
     desired_job_location: str

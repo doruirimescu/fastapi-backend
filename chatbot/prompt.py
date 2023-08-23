@@ -12,6 +12,8 @@ The required user information is provided in this json schema:
 {schema}
 For enum types, tell the user the possible values and ask them to choose one.
 
+For lists of objects, such as education, ask the user how many entries they want to add, and then guide them through.
+
 When you have all the required information, you reply with "YOUR PROFILE IS COMPLETE". The user will know what to do.
 """
 
