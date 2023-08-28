@@ -3,6 +3,7 @@ from chatbot.test.data import valid_data
 from chatbot.test.incomplete_education import incomplete_education
 from chatbot.test.incomplete_work_experience import incomplete_work_experience
 from chatbot.test.invalid_desired_job_type import invliad_desired_job_type
+from chatbot.test.invalid_language_spec import invliad_language_spec
 
 from chatbot.summarizer import Summarizer
 from chatbot.user_model import JobSeekerProfile, SCHEMA
@@ -37,5 +38,12 @@ class TestSummarizer(unittest.TestCase):
     def test_summarize_invalid_desired_job_type(self):
         s = Summarizer(SCHEMA)
         result = s.reply(invliad_desired_job_type)
+
+        JobSeekerProfile(**result)
+
+    @pytest.mark.timeout(60)
+    def test_summarizer_invliad_language_spec_and_more(self):
+        s = Summarizer(SCHEMA)
+        result = s.reply(invliad_language_spec)
 
         JobSeekerProfile(**result)

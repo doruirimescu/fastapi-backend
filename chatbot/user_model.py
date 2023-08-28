@@ -73,7 +73,16 @@ class Language(BaseModel):
             'examples': ['English'],
         }
     )
-    proficiency_level: ProfficiencyLevel
+    proficiency_level: ProfficiencyLevel = Field(
+        json_schema_extra={
+            'title': 'Language profficency level',
+            'description': (
+                f'The profficency level of the language you speak. '
+                f'Only allowed values are the ones defined in the enum type.',
+            ),
+            'examples': ['fluent'],
+        }
+    )
 
 
 class DesiredJobType(str, Enum):
