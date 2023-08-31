@@ -6,27 +6,36 @@ from datetime import date
 #TODO: Add validators
 # https://python.langchain.com/docs/modules/model_io/output_parsers/pydantic
 
+
+class Unanswered(BaseModel):
+    # To be used for fields that have not been answered
+    pass
+
+def is_unanswered(value):
+    return value == Unanswered()
+
 class ContactInformation(BaseModel):
-    email: EmailStr
-    phone_number: str
+    email: EmailStr | Unanswered
+    phone_number: str | Unanswered
 
 
 class Education(BaseModel):
-    degree: str
-    field_of_study: str
-    institution: str
-    graduation_year: int
+    degree: str | Unanswered
+    field_of_study: str | Unanswered
+    institution: str | Unanswered
+    graduation_year: int | Unanswered
 
 
 class WorkExperience(BaseModel):
-    job_title: str
-    company: str
-    start_date: date = Field(
+    job_title: str | Unanswered
+    company: str | Unanswered
+    start_date: date | Unanswered = Field(
         json_schema_extra={
             'title': 'Start date of this work position',
             'description': 'The start date of this work position. Format: YYYY-MM-DD',
             'examples': ['YYYYY-MM-DD'],
-        }
+        },
+        default=Unanswered(),
     )
     end_date: Optional[date] = Field(
         json_schema_extra={
@@ -42,21 +51,21 @@ class WorkExperience(BaseModel):
 
 
 class Certification(BaseModel):
-    certification_name: str
-    issuing_organization: str
-    date_issued: str
-    expiration_date: Optional[date] = Field(
+    certification_name: str | Unanswered = Unanswered()
+    issuing_organization: str | Unanswered = Unanswered()
+    date_issued: str | Unanswered = Unanswered()
+    expiration_date: Optional[date | Unanswered] = Field(
         json_schema_extra={
             'title': 'Expiration date of this certification',
             'description': 'The expiration date of this certification. Format: YYYY-MM-DD. If it does not expire, write n/a.',
             'examples': ['YYYYY-MM-DD', 'n/a'],
-        }
+        },
+        default=Unanswered(),
     )
 
     @validator('expiration_date', pre=True)
     def validate_expiration_date(cls, value):
         return None if value == "n/a" else value
-
 
 class ProfficiencyLevel(str, Enum):
     NATIVE = "native"
@@ -66,12 +75,13 @@ class ProfficiencyLevel(str, Enum):
 
 
 class Language(BaseModel):
-    language: str = Field(
+    language: str | Unanswered = Field(
         json_schema_extra={
             'title': 'Language',
             'description': 'The language you speak',
             'examples': ['English'],
-        }
+        },
+        default=Unanswered(),
     )
     proficiency_level: ProfficiencyLevel = Field(
         json_schema_extra={
@@ -102,10 +112,10 @@ def has_required_fields(data: dict, model) -> bool:
 
 class JobSeekerProfile(BaseModel):
     # This datastructure is used to store the user's profile information
-    first_name: str = Field(description="What is your first name ?")
+    first_name: str | Unanswered = Field(description="What is your first name ?", default=Unanswered())
     middle_name: Optional[str] = Field(description="What is your middle name ? Answer n/a if you don't have one")
-    last_name: str = Field(description="What is your last name ?")
-    contact_information: ContactInformation
+    last_name: str | Unanswered = Field(description="What is your last name ?", default=Unanswered())
+    contact_information: ContactInformation | Unanswered = Field(default=Unanswered())
     education: List[Education] = Field(
         json_schema_extra={
             'title': 'Education',
